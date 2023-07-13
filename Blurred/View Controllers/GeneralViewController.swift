@@ -11,12 +11,14 @@ import SwiftUI
 
 class GeneralViewController: NSHostingController<GeneralView> {
 
-    @objc required dynamic init?(coder: NSCoder) {
+    @objc
+    required dynamic init?(coder: NSCoder) {
         super.init(coder: coder, rootView: GeneralView(setting: DimManager.sharedInstance.setting))
         preferredContentSize = CGSize(width: 600, height: 600)
     }
-    
+
     class func initWithStoryboard() -> GeneralViewController {
-        return NSStoryboard(name: "Main", bundle: nil).instantiateController(withIdentifier: "GeneralViewController") as! GeneralViewController
+        // swiftlint:disable:next force_cast
+        NSStoryboard(name: "Main", bundle: nil).instantiateController(withIdentifier: "GeneralViewController") as! GeneralViewController
     }
 }

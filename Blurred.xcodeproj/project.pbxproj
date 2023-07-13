@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -171,22 +171,30 @@
 		08FF678B23A9156A00EACD58 /* Blurred */ = {
 			isa = PBXGroup;
 			children = (
-				0850B62224208EA200717EDE /* Views */,
+				08FF678C23A9156A00EACD58 /* AppDelegate.swift */,
 				0851749D23FD0A0B00B3B84F /* Blurred.entitlements */,
+				0850B62224208EA200717EDE /* Views */,
 				0853667523C4C09F00567AA8 /* Models */,
 				55AA99F623B07ACC005478F2 /* Utilities */,
-				55AA99F523B07AB8005478F2 /* ViewControllers */,
-				08FF678C23A9156A00EACD58 /* AppDelegate.swift */,
-				08FF679023A9156C00EACD58 /* Assets.xcassets */,
-				B32C8D922498D3A9003562C9 /* Localizable.strings */,
-				08FF679223A9156C00EACD58 /* Main.storyboard */,
+				55AA99F523B07AB8005478F2 /* View Controllers */,
+				47CE6E622A60A554001846AC /* Supporting Files */,
 				08FF679523A9156C00EACD58 /* Info.plist */,
 				08FF678A23A9156A00EACD58 /* Products */,
 			);
 			path = Blurred;
 			sourceTree = "<group>";
 		};
-		55AA99F523B07AB8005478F2 /* ViewControllers */ = {
+		47CE6E622A60A554001846AC /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				08FF679223A9156C00EACD58 /* Main.storyboard */,
+				B32C8D922498D3A9003562C9 /* Localizable.strings */,
+				08FF679023A9156C00EACD58 /* Assets.xcassets */,
+			);
+			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		55AA99F523B07AB8005478F2 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
 				0851749923FD099400B3B84F /* SettingObservable.swift */,
@@ -195,7 +203,7 @@
 				0850B6272420ABCB00717EDE /* GeneralViewController.swift */,
 				0850B6292420ABED00717EDE /* AboutViewController.swift */,
 			);
-			path = ViewControllers;
+			path = "View Controllers";
 			sourceTree = "<group>";
 		};
 		55AA99F623B07ACC005478F2 /* Utilities */ = {
@@ -240,6 +248,7 @@
 				08FF678623A9156A00EACD58 /* Frameworks */,
 				08FF678723A9156A00EACD58 /* Resources */,
 				0889D11523C4739600E867FF /* CopyFiles */,
+				47CE6E612A609A32001846AC /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -316,6 +325,27 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		47CE6E612A609A32001846AC /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [[ \"$(uname -m)\" == arm64 ]]; then\n    export PATH=\"/opt/homebrew/bin:$PATH\"\nfi\n\nif which swiftlint > /dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		0889D0FE23C4720E00E867FF /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -390,9 +420,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = BlurredLauncher/BlurredLauncher.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = VGURA84Q2L;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = BlurredLauncher/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -412,9 +443,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = BlurredLauncher/BlurredLauncher.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = VGURA84Q2L;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = BlurredLauncher/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -550,10 +582,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Blurred/Blurred.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 3;
-				DEVELOPMENT_TEAM = VGURA84Q2L;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = Blurred/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -575,10 +608,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Blurred/Blurred.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 3;
-				DEVELOPMENT_TEAM = VGURA84Q2L;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = Blurred/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (

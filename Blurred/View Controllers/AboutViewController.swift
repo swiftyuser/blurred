@@ -11,13 +11,15 @@ import SwiftUI
 
 class AboutViewController: NSHostingController<AboutView> {
 
-    @objc required dynamic init?(coder: NSCoder) {
+    @objc
+    required dynamic init?(coder: NSCoder) {
         super.init(coder: coder, rootView: AboutView())
         preferredContentSize = CGSize(width: 500, height: 360)
         preferredScreenOrigin = .init(x: 0.5, y: 0.5)
     }
-    
+
     class func initWithStoryboard() -> AboutViewController {
-        return NSStoryboard(name: "Main", bundle: nil).instantiateController(withIdentifier: "AboutViewController") as! AboutViewController
+        // swiftlint:disable:next force_cast
+        NSStoryboard(name: "Main", bundle: nil).instantiateController(withIdentifier: "AboutViewController") as! AboutViewController
     }
 }

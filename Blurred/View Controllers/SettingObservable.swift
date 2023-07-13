@@ -10,45 +10,44 @@ import Foundation
 import Combine
 
 final class SettingObservable: ObservableObject {
-    
+
+    // MARK: - Reactive
     @Published var isStartWhenLogin: Bool = UserDefaults.isStartWhenLogin {
         didSet {
-            UserDefaults.isStartWhenLogin = self.isStartWhenLogin
+            UserDefaults.isStartWhenLogin = isStartWhenLogin
         }
     }
-    
+
     @Published var isOpenPrefWhenOpenApp: Bool = UserDefaults.isOpenPrefWhenOpenApp {
         didSet {
-            UserDefaults.isOpenPrefWhenOpenApp = self.isOpenPrefWhenOpenApp
+            UserDefaults.isOpenPrefWhenOpenApp = isOpenPrefWhenOpenApp
         }
     }
-    
+
     @Published var dimMode: DimMode = DimMode(rawValue: UserDefaults.dimMode) ?? .single  {
         didSet {
-            UserDefaults.dimMode = self.dimMode.rawValue
+            UserDefaults.dimMode = dimMode.rawValue
         }
     }
-    
+
     @Published var alpha: Double = UserDefaults.alpha {
         didSet {
-            UserDefaults.alpha = self.alpha
+            UserDefaults.alpha = alpha
         }
     }
-    
+
     @Published var isEnabled: Bool = UserDefaults.isEnabled {
         didSet {
-            UserDefaults.isEnabled = self.isEnabled
+            UserDefaults.isEnabled = isEnabled
         }
     }
-    
+
     @Published var globalHotkey: GlobalKeybindPreferences? = UserDefaults.globalKey {
         didSet {
-            UserDefaults.globalKey = self.globalHotkey
+            UserDefaults.globalKey = globalHotkey
         }
     }
-    
+
     @Published var currentHotkeyLabel: String = UserDefaults.globalKey?.description ?? "Set Hotkey"
-    
     @Published var isListenningForHotkey: Bool = false
-    
 }

@@ -1,0 +1,18 @@
+opt_in_rules:
+  - private_outlet
+  - force_unwrapping
+  - trailing_closure
+disabled_rules:
+  - line_length
+  - identifier_name
+  - opening_brace
+  - cyclomatic_complexity
+trailing_comma:
+    mandatory_comma: true
+statement_position:
+  statement_mode: uncuddled_else
+private_outlet:
+  allow_private_set: true
+excluded: # paths to ignore during linting. Takes precedence over `included`.
+  - Pods
+  - Sourcery

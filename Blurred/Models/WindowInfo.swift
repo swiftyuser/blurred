@@ -13,6 +13,7 @@ import Cocoa
 // https://developer.apple.com/documentation/coregraphics/quartz_window_services/required_window_list_keys?language=objc
 
 struct WindowInfo {
+
     var alpha: Double
     var backingLocationVideoMemory: Bool?
     var bounds: CGRect?
@@ -28,20 +29,21 @@ struct WindowInfo {
 }
 
 extension WindowInfo {
+
     init(dict: [String: Any]) {
-        alpha = dict["kCGWindowAlpha"] as! Double
+        alpha = dict["kCGWindowAlpha"] as? Double ?? 0
         backingLocationVideoMemory = dict["CGWindowBackingLocationVideoMemory"] as? Bool
+        // swiftlint:disable:next force_cast
         let boundsDict =  dict["kCGWindowBounds"] as! CFDictionary
         bounds = CGRect(dictionaryRepresentation: boundsDict)
         isOnScreen = dict["kCGWindowIsOnscreen"] as? Bool
-        layer = dict["kCGWindowLayer"] as! Int
-        memoryUsage = dict["kCGWindowMemoryUsage"] as! Double
+        layer = dict["kCGWindowLayer"] as? Int ?? 0
+        memoryUsage = dict["kCGWindowMemoryUsage"] as? Double ?? 0
         name = dict["kCGWindowName"] as? String
-        number = dict["kCGWindowNumber"] as! Int
+        number = dict["kCGWindowNumber"] as? Int ?? 0
         ownerName = dict["kCGWindowOwnerName"] as? String
-        ownerPID = dict["kCGWindowOwnerPID"] as! Int
-        sharingState = dict["kCGWindowSharingState"] as! Int
-        storeType = dict["kCGWindowStoreType"] as! Int
+        ownerPID = dict["kCGWindowOwnerPID"] as? Int ?? 0
+        sharingState = dict["kCGWindowSharingState"] as? Int ?? 0
+        storeType = dict["kCGWindowStoreType"] as? Int ?? 0
     }
 }
-
