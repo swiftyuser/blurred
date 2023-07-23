@@ -15,17 +15,13 @@ class StatusBarSwipeToSetAlphaView: NSView {
     }
 
     override func scrollWheel(with event: NSEvent) {
-        if
-            event.deltaY > 0,
-            DimManager.sharedInstance.setting.alpha > 10.0
-        {
-                DimManager.sharedInstance.setting.alpha -= 1.0
+        let setting = DimManager.shared.setting
+
+        if event.deltaY > 0, setting.alpha > 10.0 {
+            setting.alpha -= 1.0
         }
-        if
-            event.deltaY < 0,
-            DimManager.sharedInstance.setting.alpha < 100
-        {
-            DimManager.sharedInstance.setting.alpha += 1
+        else if event.deltaY < 0, setting.alpha < 100 {
+            setting.alpha += 1
         }
     }
 }

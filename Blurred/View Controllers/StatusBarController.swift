@@ -28,11 +28,11 @@ private extension StatusBarController {
 
     @objc
     private func sliderChanged() {
-        DimManager.sharedInstance.setting.alpha = slider.doubleValue
+        DimManager.shared.setting.alpha = slider.doubleValue
     }
     @objc
     private func toggleEnable() {
-        DimManager.sharedInstance.setting.isEnabled.toggle()
+        DimManager.shared.setting.isEnabled.toggle()
     }
 
     @objc
@@ -58,15 +58,15 @@ private extension StatusBarController {
     private func setupSlider() {
         slider.minValue = 10.0
         slider.maxValue = 100.0
-        slider.doubleValue = DimManager.sharedInstance.setting.alpha
+        slider.doubleValue = DimManager.shared.setting.alpha
 
-        DimManager.sharedInstance.setting.$alpha
+        DimManager.shared.setting.$alpha
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .assign(to: \.doubleValue, on: self.slider)
             .store(in: &cancellableSet)
 
-        DimManager.sharedInstance.setting.$isEnabled
+        DimManager.shared.setting.$isEnabled
             .receive(on: DispatchQueue.main)
             .assign(to: \.isEnabled, on: self.slider)
             .store(in: &cancellableSet)
@@ -78,12 +78,12 @@ private extension StatusBarController {
     private func getContextMenu() -> NSMenu {
         let menu = NSMenu()
         let sliderMenuItem = NSMenuItem()
-        let titleEnable = DimManager.sharedInstance.setting.isEnabled ? "Disable".localized : "Enable".localized
+        let titleEnable = DimManager.shared.setting.isEnabled ? "Disable".localized : "Enable".localized
 
         let enableButton = NSMenuItem(title: titleEnable, action: #selector(toggleEnable), keyEquivalent: "E")
         enableButton.target = self
 
-        DimManager.sharedInstance.setting.$isEnabled
+        DimManager.shared.setting.$isEnabled
             .receive(on: DispatchQueue.main)
             .sink {[weak enableButton] isEnabled in
                 let title = isEnabled ? "Disable".localized : "Enable".localized

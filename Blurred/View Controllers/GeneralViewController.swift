@@ -13,7 +13,7 @@ class GeneralViewController: NSHostingController<GeneralView> {
 
     @objc
     required dynamic init?(coder: NSCoder) {
-        super.init(coder: coder, rootView: GeneralView(setting: DimManager.sharedInstance.setting))
+        super.init(coder: coder, rootView: GeneralView(setting: DimManager.shared.setting))
         preferredContentSize = CGSize(width: 600, height: 600)
     }
 

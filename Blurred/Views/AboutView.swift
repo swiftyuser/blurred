@@ -35,7 +35,7 @@ struct AboutView: View {
                                     .foregroundColor(.primary)
                             }
 
-                            Text("Version \(self.releaseVersion) (\(self.buildVersion))")
+                            Text("Version \(releaseVersion) (\(buildVersion))")
                                 .font(.system(size: 13))
                                 .foregroundColor(.secondary)
                         }

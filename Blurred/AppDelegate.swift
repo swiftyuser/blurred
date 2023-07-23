@@ -20,14 +20,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         didSet {
             guard let hotKey = hotKey else { return }
             hotKey.keyDownHandler = {
-                DimManager.sharedInstance.setting.isEnabled.toggle()
+                DimManager.shared.setting.isEnabled.toggle()
             }
         }
     }
 
     let eventMonitor = EventMonitor(mask: .leftMouseUp) { _ in
         // Hanlde this without delay
-        DimManager.sharedInstance.dim(runningApplication: NSWorkspace.shared.frontmostApplication, withDelay: false)
+        DimManager.shared.dim(runningApplication: NSWorkspace.shared.frontmostApplication,
+                              withDelay: false)
     }
 
     // MARK: - Life cycle
@@ -40,7 +41,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func applicationDidChangeScreenParameters(_ notification: Notification) {
-        DimManager.sharedInstance.dim(runningApplication: NSWorkspace.shared.frontmostApplication)
+        DimManager.shared.dim(runningApplication: NSWorkspace.shared.frontmostApplication)
     }
 }
 
@@ -49,7 +50,8 @@ private extension AppDelegate {
 
     private func setupHotKey() {
         guard let globalKey = UserDefaults.globalKey else { return }
-        hotKey = HotKey(keyCombo: KeyCombo(carbonKeyCode: globalKey.keyCode, carbonModifiers: globalKey.carbonFlags))
+        hotKey = HotKey(keyCombo: KeyCombo(carbonKeyCode: globalKey.keyCode,
+                                           carbonModifiers: globalKey.carbonFlags))
     }
 
     private func openPrefWindowIfNeeded() {

@@ -27,8 +27,8 @@ class PreferencesWindowController: NSWindowController {
     // MARK: - Variables
     static let shared: PreferencesWindowController = {
         // swiftlint:disable:next force_cast
-        let wc = NSStoryboard(name: "Main", bundle: nil).instantiateController(withIdentifier: "PreferencesWindowController") as! PreferencesWindowController
-        return wc
+        let controller = NSStoryboard(name: "Main", bundle: nil).instantiateController(withIdentifier: "PreferencesWindowController") as! PreferencesWindowController
+        return controller
     }()
 
     private var menuSegment: MenuSegment = .general {
@@ -41,7 +41,7 @@ class PreferencesWindowController: NSWindowController {
 
     private let generalVC = GeneralViewController.initWithStoryboard()
     private let aboutVC = AboutViewController.initWithStoryboard()
-    private let setting = DimManager.sharedInstance.setting
+    private let setting = DimManager.shared.setting
 
     // MARK: - Life cycle
     override func windowDidLoad() {

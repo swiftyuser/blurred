@@ -19,10 +19,11 @@ enum DimMode: Int {
 class DimManager {
 
     // MARK: - Variables
-    static let sharedInstance = DimManager()
+    static let shared = DimManager()
     let setting = SettingObservable()
     private var windows: [NSWindow] = []
     private var cancellableSet: Set<AnyCancellable> = []
+    private var observer: NSObjectProtocol?
 
     // MARK: - Init
     private init() {
@@ -32,7 +33,7 @@ class DimManager {
 
     // MARK: - Public
     func dim(runningApplication: NSRunningApplication?, withDelay: Bool = true) {
-        guard DimManager.sharedInstance.setting.isEnabled else {
+        guard DimManager.shared.setting.isEnabled else {
             removeAllOverlay()
             return
         }
@@ -40,14 +41,18 @@ class DimManager {
         // Remove dim if user click to desktop
         // This will also remove dim if user click to finder
         // Improve: Find the other way to check if user click to desktop
-        if let bundle = runningApplication?.bundleIdentifier, bundle == "com.apple.finder" {
+        if
+            let bundle = runningApplication?.bundleIdentifier,
+            bundle == "com.apple.finder"
+        {
             removeAllOverlay()
             return
         }
 
-        let color = NSColor.black.withAlphaComponent(CGFloat(DimManager.sharedInstance.setting.alpha/100.0))
+        let alpha = CGFloat(setting.alpha / 100.0)
+        let color = NSColor.black.withAlphaComponent(alpha)
 
-        DimManager.sharedInstance.windows(color: color, withDelay: withDelay) { [weak self] windows in
+        DimManager.shared.windows(color: color, withDelay: withDelay) { [weak self] windows in
             guard let strongSelf = self else { return }
             strongSelf.removeAllOverlay()
             strongSelf.windows = windows
@@ -97,7 +102,7 @@ extension DimManager {
 
     private func windowForScreen(screen: NSScreen, windowInfos: [WindowInfo], color: NSColor) -> NSWindow {
         let frame = NSRect(origin: .zero, size: screen.frame.size)
-        let overlayWindow = NSWindow.init(contentRect: frame, styleMask: .borderless, backing: .buffered, defer: false, screen: screen)
+        let overlayWindow = NSWindow(contentRect: frame, styleMask: .borderless, backing: .buffered, defer: false, screen: screen)
         overlayWindow.isReleasedWhenClosed = false
         overlayWindow.animationBehavior = .none
         overlayWindow.backgroundColor = color
@@ -108,7 +113,7 @@ extension DimManager {
         var windowNumber = 0
         switch setting.dimMode {
         case .single:
-            windowNumber = windowInfos[safe: 0]?.number ?? 0
+            windowNumber = windowInfos.first?.number ?? 0
         case .parallel:
             // Get frontmost window of each screen
             let newScreen = NSRect(x: screen.frame.minX,
@@ -117,10 +122,7 @@ extension DimManager {
                                    height: screen.frame.height)
             let windowInfo = windowInfos.first(where: {
                 if let bound = $0.bounds {
-                    return newScreen.minX <= bound.midX &&
-                    newScreen.maxX >= bound.midX &&
-                    newScreen.minY <= bound.midY &&
-                    newScreen.maxY >= bound.midY
+                    return newScreen.intersects(bound)
                 }
                 return false
             })
@@ -139,11 +141,14 @@ extension DimManager {
 
     /// This func will return the window info of windows on all the screen
     private func getWindowInfos() -> [WindowInfo] {
-        let options = CGWindowListOption([.excludeDesktopElements, .optionOnScreenOnly])
-        let windowsListInfo = CGWindowListCopyWindowInfo(options, CGWindowID(0))
-        // swiftlint:disable:next force_cast
-        let infoList = windowsListInfo as! [[String: Any]]
-        let windowInfos = infoList.map { WindowInfo.init(dict: $0) }.filter { $0.layer == 0 } // Filter out all the other item like Status Bar icon.
+        let options: CGWindowListOption = [.excludeDesktopElements, .optionOnScreenOnly]
+        guard
+            let windowsListInfo = CGWindowListCopyWindowInfo(options, CGWindowID(0)) as? [[String: Any]]
+        else {
+            return []
+        }
+        // Filter out all the other item like Status Bar icon
+        let windowInfos = windowsListInfo.compactMap { WindowInfo(dict: $0) }.filter { $0.layer == 0 }
         return windowInfos
     }
 }
@@ -152,18 +157,21 @@ extension DimManager {
 extension DimManager {
 
     private func observeSettingChanged() {
-
         // DON'T receive this publisher on Main scheduler
         // It will cause delay
         // Still don't know why :-?
         setting.$alpha
             .removeDuplicates()
-            .sink(receiveValue: adjustDimmingLevel)
+            .sink { [weak self] alpha in
+                self?.adjustDimmingLevel(alpha: alpha)
+            }
             .store(in: &cancellableSet)
 
         setting.$isEnabled
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: toggleDimming)
+            .sink { [weak self] isEnabled in
+                self?.toggleDimming(isEnable: isEnabled)
+            }
             .store(in: &cancellableSet)
 
         setting.$dimMode
@@ -175,22 +183,22 @@ extension DimManager {
     }
 
     private func observerActiveWindowChanged() {
-        let nc = NSWorkspace.shared.notificationCenter
-        nc.addObserver(self,
-                       selector: #selector(workspaceDidReceiptAppllicatinActiveNotification),
-                       name: NSWorkspace.didActivateApplicationNotification,
-                       object: nil)
+        let notificationCenter = NSWorkspace.shared.notificationCenter
+        notificationCenter.addObserver(self,
+                                       selector: #selector(workspaceDidReceiptAppllicatinActiveNotification),
+                                       name: NSWorkspace.didActivateApplicationNotification,
+                                       object: nil)
     }
 
     @objc
-    private func workspaceDidReceiptAppllicatinActiveNotification(ntf: Notification) {
+    private func workspaceDidReceiptAppllicatinActiveNotification(_ notification: Notification) {
         guard
-            let activeAppDict = ntf.userInfo as? [AnyHashable: NSRunningApplication],
+            let activeAppDict = notification.userInfo as? [AnyHashable: NSRunningApplication],
             let activeApplication = activeAppDict["NSWorkspaceApplicationKey"]
         else {
             return
         }
-
+        print("Window changed Dim")
         dim(runningApplication: activeApplication)
     }
 }

@@ -23,7 +23,7 @@ struct GeneralView: View {
                 ZStack {
                     Image("desktop")
                         .resizable()
-                        .overlay(Color.black.opacity(self.setting.isEnabled ? self.setting.alpha/100.0 : 0))
+                        .overlay(Color.black.opacity(setting.isEnabled ? setting.alpha/100.0 : 0))
                         .cornerRadius(4)
 
                     Image("window")
@@ -65,7 +65,6 @@ struct GeneralView: View {
                         Text("Open Preferences Window when login")
                     }
                     .padding(.bottom, 10)
-
                 }
 
                 Spacer()
@@ -75,17 +74,17 @@ struct GeneralView: View {
                         .font(.headline)
                     HStack(spacing: 2) {
                         Button {
-                            self.setting.isListenningForHotkey = true
-                            self.setting.currentHotkeyLabel = "Listening..."
+                            setting.isListenningForHotkey = true
+                            setting.currentHotkeyLabel = "Listening..."
                         } label: {
-                            Text(self.setting.currentHotkeyLabel)
+                            Text(setting.currentHotkeyLabel)
                                 .frame(minWidth: 30, maxWidth: 80)
                         }.buttonStyle(BlueButtonStyle(setting: setting))
 
                         Button("⌫") {
-                            self.setting.isListenningForHotkey = false
-                            self.setting.currentHotkeyLabel = "Set Hotkey"
-                            self.setting.globalHotkey = nil
+                            setting.isListenningForHotkey = false
+                            setting.currentHotkeyLabel = "Set Hotkey"
+                            setting.globalHotkey = nil
 
                             guard let appDelegate = NSApplication.shared.delegate as? AppDelegate else { return }
                             appDelegate.hotKey = nil
@@ -119,6 +118,6 @@ struct BlueButtonStyle: ButtonStyle {
 struct GeneralView_Previews: PreviewProvider {
 
     static var previews: some View {
-        GeneralView(setting: DimManager.sharedInstance.setting)
+        GeneralView(setting: DimManager.shared.setting)
     }
 }
